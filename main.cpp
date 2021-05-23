@@ -2,10 +2,13 @@
 #include <random>
 #include <string>
 #include <fstream>
-
+#include "Hash.h"
+#include "HashTable.h"
+#include "TreeAVL.h"
 
 static const int IDENTIFICATOR_COUNT = 100;
 static const int IDENTIFICATOR_SIZE = 20;
+static const char* DATA_FILENAME = "data.txt";
 
 char getRandomChar()
 {
@@ -40,7 +43,46 @@ void GenerateDataFile(std::string_view filename, int identificatorCount, int ide
 }
 
 int main() {
+    std::ifstream file;
+    file.open(DATA_FILENAME);
 
-    GenerateDataFile("data.txt",IDENTIFICATOR_COUNT, IDENTIFICATOR_SIZE);
+    if(!file.is_open())
+    {
+        GenerateDataFile(DATA_FILENAME,IDENTIFICATOR_COUNT, IDENTIFICATOR_SIZE);
+        file.close();
+        file.open(DATA_FILENAME);
+    }
+
+    HashTable<std::string> table;
+    std::string str;
+
+    while (std::getline(file, str))
+    {
+        table.Add(str);
+    }
+
+    std::cout << table.Find("Kg%ka=y$r7IBRyE(Jx@f");
+
+    TreeAVL testTree;
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx@f");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx@f");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx@f");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx@f");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx@f");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx@f");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx@f");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx@f");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx@f");
+    testTree.Insert("Kg%ka=y$r7IBRyE(Jx@f");
+
+
     return 0;
 }
