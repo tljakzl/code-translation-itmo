@@ -15,6 +15,8 @@ class HashTable
     int size;
     int buffer_size;
     int size_all_non_nullptr;
+    THash1 hash1;
+    THash2 hash2;
 
     void Resize()
     {
@@ -73,23 +75,22 @@ public:
                 delete arr[i];
         delete[] arr;
     }
-    bool Add(const T& value, const THash1& hash1 = THash1(),const THash2& hash2 = THash2())
+    bool Add(const T& value)
     {
         if (size + 1 > int(rehash_size * buffer_size))
             Resize();
         else if (size_all_non_nullptr > 2 * size)
             Rehash();
         int h1 = hash1(value, buffer_size);
-        int h2 = hash2(value, buffer_size);
         int i = 0;
         int first_deleted = -1;
         while (arr[h1] != nullptr && i < buffer_size)
         {
-            if (arr[h1]->value == value && arr[h1]->state)
+            if (arr[h1]->state && arr[h1]->value == value)
                 return false;
             if (!arr[h1]->state && first_deleted == -1)
                 first_deleted = h1;
-            h1 = (h1 + h2) % buffer_size;
+            h1 = (h1 + hash2(value, buffer_size)) % buffer_size;
             ++i;
         }
         if (first_deleted == -1)
@@ -105,7 +106,7 @@ public:
         ++size;
         return true;
     }
-    bool Remove(const T& value, const THash1& hash1 = THash1(), const THash2& hash2 = THash2())
+    bool Remove(const T& value)
     {
         int h1 = hash1(value, buffer_size);
         int h2 = hash2(value, buffer_size);
@@ -123,16 +124,15 @@ public:
         }
         return false;
     }
-    bool Find(const T& value, const THash1& hash1 = THash1(), const THash2& hash2 = THash2())
+    bool Find(const T& value)
     {
         int h1 = hash1(value, buffer_size);
-        int h2 = hash2(value, buffer_size);
         int i = 0;
         while (arr[h1] != nullptr && i < buffer_size)
         {
-            if (arr[h1]->value == value && arr[h1]->state)
+            if (arr[h1]->state && arr[h1]->value == value)
                 return true;
-            h1 = (h1 + h2) % buffer_size;
+            h1 = (h1 + hash2(value, buffer_size)) % buffer_size;
             ++i;
         }
         return false;

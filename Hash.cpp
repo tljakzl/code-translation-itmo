@@ -1,12 +1,11 @@
 #include "Hash.h"
 
-int HashImpl(const std::string& str, int tableSize, const int key)
+int HashImpl(const std::string& str, int tableSize, int key)
 {
     int hash_result = 0;
-    for (auto s : str)
-    {
-        hash_result = (key * hash_result + static_cast<int>(s)) % tableSize;
-    }
+    for (char s : str)
+        hash_result = (hash_result + key + (int)s) % tableSize;
+
     hash_result = (hash_result * 2 + 1) % tableSize;
     return hash_result;
 }
