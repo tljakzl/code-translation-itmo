@@ -166,6 +166,26 @@ void TreeAVL::Remove(const std::string& str) {
     _tree = Remove(_tree, str);
 }
 
+bool TreeAVL::Find(const std::string& str) {
+    auto key = Hash_djb2(str);
+    return FindImpl(_tree, key);
+}
+
+bool TreeAVL::FindImpl(TreeAVL::node *p, unsigned long key) {
+    if(!p)
+        return false;
+
+    if (key == p->key)
+        return true;
+
+    if(key > p->key) {
+        return FindImpl(p->right, key);
+    }
+    else {
+        return FindImpl(p->left, key);
+    }
+}
+
 TreeAVL::node::node(const std::string& str)
 : left(nullptr)
 , right(nullptr)

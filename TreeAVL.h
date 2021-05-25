@@ -23,9 +23,11 @@ public:
     ~TreeAVL();
 
     void Insert(const std::string& str);
+    bool Find(const std::string& str);
     void Remove(const std::string& str);
 
 private:
+    bool FindImpl(node* p, unsigned long key);
     node* Insert(node* p, const std::string& str); // вставка ключа k в дерево с корнем p
     node* Remove(node* p, const std::string& str); // удаление ключа k из дерева p
     node* RotateRight(node* p); // правый поворот вокруг p
