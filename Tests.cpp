@@ -5,8 +5,6 @@
 #include "Tests.h"
 #include <random>
 #include <string>
-#include "HashTable.h"
-#include "TreeAVL.h"
 #include "Timer.h"
 
 static int TEST_COUNT = 10;
@@ -46,27 +44,14 @@ void GenerateData(Identifiers& data, int count, int size)
         data.push_back(GetRandomIdentificator(size));
 }
 
-TestResult<double> TestInsert(const Identifiers& data) {
+TestResult<double> TestInsert(const Identifiers& testData, std::vector<std::string>& mass, TreeAVL& testTree, HashTable<std::string>& table) {
     Timer timer;
     double timeM = 0.0;
     double timeT = 0.0;
     double timeH = 0.0;
+    int count = 0;
 
-    auto dataNew = data;
-    dataNew.pop_back();
-
-    std::vector<std::string> mass;
-    TreeAVL testTree;
-    HashTable<std::string> table;
-
-    for (auto &key : dataNew) {
-        mass.push_back(key);
-        testTree.Insert(key);
-        table.Add(key);
-    }
-
-    for (int i = 0; i < TEST_COUNT; ++i) {
-        auto key = data.back();
+    for (auto& key : testData) {
         {
             timer.Start();
             mass.push_back(key);
@@ -90,11 +75,12 @@ TestResult<double> TestInsert(const Identifiers& data) {
             timeH += timer.GetDuration();
             table.Remove(key);
         }
+        ++count;
     }
 
-    timeH /= TEST_COUNT;
-    timeT /= TEST_COUNT;
-    timeM /= TEST_COUNT;
+    timeH /= count;
+    timeT /= count;
+    timeM /= count;
 
     return std::make_tuple(timeH, timeT, timeM);
 }
