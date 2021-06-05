@@ -49,7 +49,6 @@ TestResult<double> TestInsert(const Identifiers& testData, std::vector<std::stri
     double timeM = 0.0;
     double timeT = 0.0;
     double timeH = 0.0;
-    int count = 0;
 
     for (auto& key : testData) {
         {
@@ -75,9 +74,9 @@ TestResult<double> TestInsert(const Identifiers& testData, std::vector<std::stri
             timeH += timer.GetDuration();
             table.Remove(key);
         }
-        ++count;
     }
 
+    double count = static_cast<double>(testData.size());
     timeH /= count;
     timeT /= count;
     timeM /= count;
@@ -85,30 +84,23 @@ TestResult<double> TestInsert(const Identifiers& testData, std::vector<std::stri
     return std::make_tuple(timeH, timeT, timeM);
 }
 
-TestResult<double> TestFind(const Identifiers& data) {
-    std::vector<std::string> mass;
-    HashTable<std::string> table;
-    TreeAVL testTree;
+TestResult<double> TestFind(const Identifiers& data, std::vector<std::string>& mass, TreeAVL& testTree, HashTable<std::string>& table) {
+    Identifiers newData;
+    auto size = data.size();
+    std::uniform_int_distribution<> distrib(0, mass.size() - 1);
+
+    for(int i = 0; i < size; ++i)
+        newData.push_back(mass[distrib(gen)]);
+
     Timer timer;
-
-    for (auto &key : data) {
-        mass.push_back(key);
-        testTree.Insert(key);
-        table.Add(key);
-    }
-
     double timeM = 0.0;
     double timeT = 0.0;
     double timeH = 0.0;
 
-    // Замер скорости поиска
-    std::uniform_int_distribution<size_t> distrib(0, data.size());
-    for (int k = 0; k < TEST_COUNT; ++k) {
-        auto randNum = distrib(gen);
-        std::string key = (data.size() <= randNum) ? GetRandomIdentificator(randNum) : data[randNum];
+    for (auto& key : newData) {
         {
             timer.Start();
-            for (auto &str : mass) {
+            for (auto &str : mass) {            // тут хотелось использовать std::find, но компилятор его вырезает в релизнолй сборке :(
                 if (str == key)
                     break;
             }
@@ -131,29 +123,19 @@ TestResult<double> TestFind(const Identifiers& data) {
         }
     }
 
-    timeH /= TEST_COUNT;
-    timeT /= TEST_COUNT;
-    timeM /= TEST_COUNT;
+    timeH /= size;
+    timeT /= size;
+    timeM /= size;
 
     return std::make_tuple(timeH, timeT, timeM);
 }
 
-TestResult<int> TestMemory(const Identifiers& data){
+TestResult<int> TestMemory(const Identifiers& data, std::vector<std::string>& mass, TreeAVL& testTree, HashTable<std::string>& table){
     int sizeH = 0;
     int sizeT = 0;
     int sizeM = 0;
-
-    std::vector<std::string> mass;
-    HashTable<std::string> table;
-    TreeAVL testTree;
-
-    for (auto &key : data) {
-        mass.push_back(key);
-        testTree.Insert(key);
-        table.Add(key);
-    }
-
     int wordSize = mass[0].size();
+
     sizeM += sizeof(std::vector<std::string>) + mass.size() * (sizeof(std::string) +  sizeof(char) * wordSize);
     sizeH += table.GetMemorySize(wordSize);
     sizeT += testTree.GetMemorySize(wordSize);

@@ -2,13 +2,18 @@
 
 int main() {
 
-  //  RunTest<double>("testFind_8.csv", TestFind, 8);
-  //  RunTest<double>("testFind_32.csv", TestFind, 32);
+    int word8 = 8;
+    int word32 = 8;
+    int step = 50;
+    int maxSizeData = 500;
 
-    RunTest<double>("testInsert_8.csv", TestInsert, 8, 50, 1000);
-    RunTest<double>("testInsert_32.csv", TestInsert, 32, 50, 1000);
+    RunTest<double>("testFind_8.csv", TestFind, word8, step, maxSizeData, step);
+    RunTest<double>("testFind_32.csv", TestFind, word32, step, maxSizeData, step);
 
-    //RunTest<int>("testMemory_32.csv", TestMemory, 32);
+    RunTest<double>("testInsert_8.csv", TestInsert, word8, step, maxSizeData);
+    RunTest<double>("testInsert_32.csv", TestInsert, word32, step, maxSizeData);
+
+    RunTest<int>("testMemory_32.csv", TestMemory, 32);
 
     return 0;
 }

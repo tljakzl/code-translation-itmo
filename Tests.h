@@ -53,9 +53,9 @@ void RunTest(const std::string& logName, TestFunction<T> fun, int identificatorS
 
 char GetRandomChar();
 std::string GetRandomIdentificator(int size);
-TestResult<double> TestFind(const Identifiers& data);
+TestResult<double> TestFind(const Identifiers& data, std::vector<std::string>& mass, TreeAVL& testTree, HashTable<std::string>& table);
 TestResult<double> TestInsert(const Identifiers& data, std::vector<std::string>& mass, TreeAVL& testTree, HashTable<std::string>& table);
-TestResult<int> TestMemory(const Identifiers& data);
+TestResult<int> TestMemory(const Identifiers& data, std::vector<std::string>& mass, TreeAVL& testTree, HashTable<std::string>& table);
 void GenerateData(Identifiers& data, int count, int size);
 void GenerateDataFile(std::string_view filename, int count, int size);
 Identifiers LoadFromFile(const std::string& fileName);
