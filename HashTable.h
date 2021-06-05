@@ -137,4 +137,8 @@ public:
         }
         return false;
     }
+
+    int GetMemorySize(int wordSize) const {
+        return size_all_non_nullptr * (sizeof(Node) + sizeof(char) * wordSize) + sizeof(HashTable);
+    }
 };

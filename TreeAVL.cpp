@@ -2,16 +2,16 @@
 #include <algorithm>
 #include "Hash.h"
 
-TreeAVL::node *TreeAVL::Insert(TreeAVL::node *p, const std::string& str) {
-    if (!p)
+TreeAVL::node *TreeAVL::Insert(TreeAVL::node *p, const std::string& str, unsigned long k) {
+    if (!p) {
+        ++size;
         return new node(str);
-
-    auto k = Hash_djb2(str);
+    }
 
     if (k < p->key)
-        p->left = Insert(p->left, str);
+        p->left = Insert(p->left, str, k);
     else if (k > p->key)
-        p->right = Insert(p->right, str);
+        p->right = Insert(p->right, str, k);
 
     // k == key не вставляем, так как элемент уже есть
 
@@ -137,14 +137,8 @@ TreeAVL::TreeAVL()
 }
 
 void TreeAVL::Insert(const std::string& str) {
-    if(_tree)
-    {
-        _tree = Insert(_tree, str);
-    }
-    else
-    {
-        _tree = new node(str);
-    }
+    auto k = Hash_djb2(str);
+    _tree = Insert(_tree, str, k);
 }
 
 TreeAVL::~TreeAVL() {
@@ -184,6 +178,10 @@ bool TreeAVL::FindImpl(TreeAVL::node *p, unsigned long key) {
     else {
         return FindImpl(p->left, key);
     }
+}
+
+int TreeAVL::GetMemorySize(int wordSize) const {
+    return sizeof(TreeAVL) + (sizeof(char) * wordSize + sizeof(node)) * size;
 }
 
 TreeAVL::node::node(const std::string& str)

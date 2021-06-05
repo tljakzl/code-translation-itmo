@@ -25,10 +25,11 @@ public:
     void Insert(const std::string& str);
     bool Find(const std::string& str);
     void Remove(const std::string& str);
+    int GetMemorySize(int wordSize) const;
 
 private:
     bool FindImpl(node* p, unsigned long key);
-    node* Insert(node* p, const std::string& str); // вставка ключа k в дерево с корнем p
+    node* Insert(node* p, const std::string& str, unsigned long k); // вставка ключа k в дерево с корнем p
     node* Remove(node* p, const std::string& str); // удаление ключа k из дерева p
     node* RotateRight(node* p); // правый поворот вокруг p
     node* RotateLeft(node* q); // левый поворот вокруг q
@@ -43,6 +44,7 @@ private:
     void _free_tree(node* tree);
 
 private:
+    int size = 0;
     node* _tree;
 };
 
